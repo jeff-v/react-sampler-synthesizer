@@ -17,19 +17,16 @@ class App extends Component {
     const AudioContext = window.AudioContext;
     const audioCtx = new AudioContext();
 
-    const osc = new OscillatorNode(audioCtx, {
-      type: sample.type,
-      detune: sample.detune,
-      frequency: sample.frequency
-    });
+    const osc = audioCtx.createOscillator()
+    osc.detune.value = sample.detune;
+    osc.frequency.value = sample.frequency
 
     const gainNode = audioCtx.createGain();
     osc.connect(gainNode);
     gainNode.connect(audioCtx.destination);
     osc.start(0)
-    gainNode.gain.value = 0.001;
-    console.log(osc, gainNode)
-    window.setTimeout(osc.disconnect(), sample.length)
+    gainNode.gain.value = sample.volume;
+    setTimeout(() => osc.stop(), sample.length * 1000)
   }
 
   onSampleChange = (e) => {
