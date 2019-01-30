@@ -5,36 +5,57 @@ export default class CreateSample extends Component {
     super(props);
 
     this.state = {
-      currentSample: {
-        length: "",
-        source: "",
-        tone: "",
-        volume: ""
-      }
+      length: "",
+      source: "",
+      frequency: "",
+      detune: "",
+      volume: "",
+      waveType: "sine",
+      osc: {},
+      gainNode: {}
     };
   }
 
-  modifySampleLength = e => {};
+  createSample = () => {
+    const AudioContext = window.AudioContext;
+    const audioCtx = new AudioContext();
 
-  modifyTone = e => {
-    this.setState({
-      currentSample: {
-        tone: e.target.value
-      }
-    })
+    const osc = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+
+    osc.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    console.log(this.state);
+    this.setState(
+      {
+        currentSample: {
+          osc: osc,
+          gainNode: gainNode
+        }
+      },
+      this.updateSamples(this.state)
+    );
   };
 
-  createSample = () => {
-    const currentSample = this.state;
-    this.props.onSampleChange(currentSample);
+  updateSamples = sample => {
+    this.props.onSampleChange(sample);
     this.setState({
-      currentSample: {
-        length: '',
-        source: '',
-        tone: '',
-        volume: ''
-      }
-    })
+      length: "",
+      source: "",
+      detune: "",
+      frequency: "",
+      volume: "",
+      waveType: "",
+      osc: {},
+      gainNode: {}
+    });
+  };
+
+  handleSampleChange = e => {
+    const name = e.target.name;
+    this.setState({
+      [name]: e.target.value
+    });
   };
 
   render() {
@@ -43,11 +64,43 @@ export default class CreateSample extends Component {
         <section>
           <form>
             <label>
-              Tone in Hz:
+              Frequency:
               <input
+                name="frequency"
                 type="text"
-                value={this.state.tone}
-                onChange={this.modifyTone}
+                value={this.state.frequency}
+                onChange={this.handleSampleChange}
+              />
+            </label>
+            <label>
+              Wave type:
+              <select
+                name="waveType"
+                value={this.state.waveType}
+                onChange={this.handleSampleChange}
+              >
+                <option value="sine">Sine</option>
+                <option value="square">Square</option>
+                <option value="sawtooth">Sawtooth</option>
+                <option value="triangle">Triangle</option>
+              </select>
+            </label>
+            <label>
+              Detune:
+              <input
+                name="detune"
+                type="text"
+                value={this.state.detune}
+                onChange={this.handleSampleChange}
+              />
+            </label>
+            <label>
+              Length
+              <input
+                name="length"
+                type="text"
+                value={this.state.length}
+                onChange={this.handleSampleChange}
               />
             </label>
           </form>

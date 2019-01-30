@@ -10,34 +10,27 @@ class App extends Component {
       source: {},
       oscillator: {},
       samples: [],
-      buttons: [],
-      currentSample: {}
+      buttons: []
     };
   }
 
   componentDidMount() {
     const buttonArray = [];
     for (let i = 0; i < 16; i++) {
-      buttonArray.push(<button className={i} />);
+      buttonArray.push(<button className={i} onClick={this.playSample}/>);
     }
 
-    const AudioContext = window.AudioContext;
-    const audioCtx = new AudioContext();
-
-    const osc = audioCtx.createOscillator();
-    const gainNode = audioCtx.createGain();
-
-    osc.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
-
     this.setState({
-      oscillator: osc,
-      source: osc,
       buttons: buttonArray
     });
   }
 
+  playSample = () => {
+
+  }
+
   onSampleChange = (e) => {
+    console.log(e)
     this.setState(prevState => ({
       samples: [...prevState.samples, e]
     }))
