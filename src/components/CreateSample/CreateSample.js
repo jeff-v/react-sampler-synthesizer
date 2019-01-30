@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import "./CreateSample.css";
 
 export default class CreateSample extends Component {
   constructor(props) {
@@ -10,7 +11,7 @@ export default class CreateSample extends Component {
       frequency: 440,
       detune: 0,
       volume: 1,
-      waveType: "sine",
+      waveType: "sine"
     };
   }
 
@@ -23,6 +24,7 @@ export default class CreateSample extends Component {
       frequency: 440,
       volume: 1,
       waveType: "sine",
+      samplePad: ""
     });
   };
 
@@ -34,9 +36,16 @@ export default class CreateSample extends Component {
   };
 
   render() {
+    const padAssignment = [];
+    (function samplePads(numberOfPads) {
+      for (let i = 0; i < numberOfPads; i++) {
+        padAssignment.push(<option value={i}>{i}</option>)
+      }
+    })(16)
+
     return (
-      <div>
-        <section>
+      <div className="sampler-background">
+        <section className="sampler-section">
           <form>
             <label>
               Frequency:
@@ -80,6 +89,16 @@ export default class CreateSample extends Component {
             </label>
           </form>
         </section>
+        <label>
+          Assign to sample pad:
+          <select
+            name="assignToSampler"
+            value={this.state.waveType}
+            onChange={this.handleSampleChange}
+          >
+            {padAssignment}
+          </select>
+        </label>
         <button onClick={this.createSample}>Create Sample</button>
       </div>
     );
