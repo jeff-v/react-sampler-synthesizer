@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import CreateSample from './components/CreateSample/CreateSample';
 import styles from "./App.css";
 
 class App extends Component {
@@ -9,7 +10,8 @@ class App extends Component {
       source: {},
       oscillator: {},
       samples: [],
-      buttons: []
+      buttons: [],
+      currentSample: {}
     };
   }
 
@@ -35,10 +37,11 @@ class App extends Component {
     });
   }
 
-  createSample = e => {
-    this.state.oscillator.start();
-    e.preventDefault();
-  };
+  onSampleChange = (e) => {
+    this.setState(prevState => ({
+      samples: [...prevState.samples, e]
+    }))
+  }
 
   render() {
     const { buttons } = this.state;
@@ -49,7 +52,7 @@ class App extends Component {
     return (
       <div className="">
         <section className="wrapper">{samplerButtons}</section>
-        <button onClick={this.createSample}>Create Sample</button>
+        <CreateSample onSampleChange={this.onSampleChange} />
       </div>
     );
   }
