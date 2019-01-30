@@ -5,49 +5,24 @@ export default class CreateSample extends Component {
     super(props);
 
     this.state = {
-      length: "",
+      length: 1,
       source: "",
-      frequency: "",
-      detune: "",
-      volume: "",
+      frequency: 440,
+      detune: 0,
+      volume: 1,
       waveType: "sine",
-      osc: {},
-      gainNode: {}
     };
   }
 
   createSample = () => {
-    const AudioContext = window.AudioContext;
-    const audioCtx = new AudioContext();
-
-    const osc = audioCtx.createOscillator();
-    const gainNode = audioCtx.createGain();
-
-    osc.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
-    console.log(this.state);
-    this.setState(
-      {
-        currentSample: {
-          osc: osc,
-          gainNode: gainNode
-        }
-      },
-      this.updateSamples(this.state)
-    );
-  };
-
-  updateSamples = sample => {
-    this.props.onSampleChange(sample);
+    this.props.onSampleChange(this.state);
     this.setState({
-      length: "",
+      length: 1,
       source: "",
-      detune: "",
-      frequency: "",
-      volume: "",
-      waveType: "",
-      osc: {},
-      gainNode: {}
+      detune: 0,
+      frequency: 440,
+      volume: 1,
+      waveType: "sine",
     });
   };
 
