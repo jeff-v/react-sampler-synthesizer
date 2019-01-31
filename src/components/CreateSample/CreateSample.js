@@ -1,105 +1,68 @@
 import React, { Component } from "react";
 import "./CreateSample.css";
+import OscillatorSettings from "../OscillatorSettings/OscillatorSettings";
 
 export default class CreateSample extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      length: 1,
-      source: "",
-      frequency: 440,
-      detune: 0,
-      volume: 1,
-      waveType: "sine"
+      sampleSum: [
+        {
+          length: 1,
+          source: "",
+          detune: 0,
+          frequency: 440,
+          volume: 1,
+          waveType: "sine",
+        }
+      ],
+      sampleAssignment: 1,
+      samplerRows: 1
     };
   }
 
   createSample = () => {
     this.props.onSampleChange(this.state);
     this.setState({
-      length: 1,
-      source: "",
-      detune: 0,
-      frequency: 440,
-      volume: 1,
-      waveType: "sine",
-      samplePad: ""
+      sampleSum: [
+        {
+          length: 1,
+          source: "",
+          detune: 0,
+          frequency: 440,
+          volume: 1,
+          waveType: "sine",
+          sampleAssignment: 1
+        }
+      ],
+      samplerRows: 1
     });
   };
 
-  handleSampleChange = e => {
-    const name = e.target.name;
+  addAdditionalSample = () => {
     this.setState({
-      [name]: e.target.value
+      samplerRows: this.state.samplerRows + 1
     });
   };
 
   render() {
-    const padAssignment = [];
-    (function samplePads(numberOfPads) {
-      for (let i = 0; i < numberOfPads; i++) {
-        padAssignment.push(<option value={i}>{i}</option>)
-      }
-    })(16)
+    const samplerRows = [];
+    for (let i = 0; i < this.state.samplerRows; i++) {
+      samplerRows.push(
+        <OscillatorSettings onSampleChange={this.props.onSampleChange} id={i} />
+      );
+    }
 
     return (
       <div className="sampler-background">
         <section className="sampler-section">
-          <form>
-            <label>
-              Frequency:
-              <input
-                name="frequency"
-                type="text"
-                value={this.state.frequency}
-                onChange={this.handleSampleChange}
-              />
-            </label>
-            <label>
-              Wave type:
-              <select
-                name="waveType"
-                value={this.state.waveType}
-                onChange={this.handleSampleChange}
-              >
-                <option value="sine">Sine</option>
-                <option value="square">Square</option>
-                <option value="sawtooth">Sawtooth</option>
-                <option value="triangle">Triangle</option>
-              </select>
-            </label>
-            <label>
-              Detune:
-              <input
-                name="detune"
-                type="text"
-                value={this.state.detune}
-                onChange={this.handleSampleChange}
-              />
-            </label>
-            <label>
-              Length
-              <input
-                name="length"
-                type="text"
-                value={this.state.length}
-                onChange={this.handleSampleChange}
-              />
-            </label>
-          </form>
+          {samplerRows}
+          <button onClick={this.createSample}>Create Sample</button>
+          <button onClick={this.addAdditionalSample}>
+            Add Additional Sample
+          </button>
         </section>
-        <label>
-          Assign to sample pad:
-          <select
-            name="assignToSampler"
-            value={this.state.waveType}
-            onChange={this.handleSampleChange}
-          >
-            {padAssignment}
-          </select>
-        </label>
-        <button onClick={this.createSample}>Create Sample</button>
       </div>
     );
   }

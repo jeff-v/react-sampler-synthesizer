@@ -8,32 +8,49 @@ class App extends Component {
 
     this.state = {
       samples: [],
-      buttons: []
+      buttons: [],
+      numberOfPads: 16
     };
+  }
+
+  componentDidMount() {
+    const samples = [];
+    for (let i = 0; i < this.state.numberOfPads; i++) {
+      samples.push({})
+    }
+    this.setState({
+      samples: samples
+    })
   }
 
   playSample = e => {
     const sample = JSON.parse(e.target.value);
+    console.log(sample)
     const AudioContext = window.AudioContext;
     const audioCtx = new AudioContext();
 
-    const osc = audioCtx.createOscillator();
-    osc.detune.value = sample.detune;
-    osc.frequency.value = sample.frequency;
-    osc.type = sample.waveType
+    sample.forEach((settingObject) => {
+      const osc = audioCtx.createOscillator();
+      osc.detune.value = settingObject.detune;
+      osc.frequency.value = settingObject.frequency;
+      osc.type = settingObject.waveType
 
-    const gainNode = audioCtx.createGain();
-    osc.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
-    osc.start(0);
-    gainNode.gain.value = sample.volume;
-    setTimeout(() => osc.stop(), sample.length * 1000);
+      const gainNode = audioCtx.createGain();
+      osc.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      osc.start(0);
+      gainNode.gain.value = settingObject.volume;
+      setTimeout(() => osc.stop(), settingObject.length * 1000);
+    })
+
   };
 
   onSampleChange = e => {
-    this.setState(prevState => ({
-      samples: [...prevState.samples, e]
-    }));
+    let sampleOrderCopy = this.state.samples
+    sampleOrderCopy[e.sampleAssignment - 1] = e.sampleSum
+    this.setState({
+      samples: sampleOrderCopy
+    });
   };
 
   render() {
