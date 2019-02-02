@@ -24,6 +24,7 @@ class App extends Component {
   }
 
   playSample = e => {
+    console.log(e.target)
     const sample = JSON.parse(e.target.value);
     console.log(sample)
     const AudioContext = window.AudioContext;
