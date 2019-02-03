@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import CreateSample from "./components/CreateSample/CreateSample";
+import _ from "lodash";
 import "./App.css";
 
 class App extends Component {
@@ -16,39 +17,38 @@ class App extends Component {
   componentDidMount() {
     const samples = [];
     for (let i = 0; i < this.state.numberOfPads; i++) {
-      samples.push({})
+      samples.push({});
     }
     this.setState({
       samples: samples
-    })
+    });
   }
 
   playSample = e => {
-    console.log(e.target)
     const sample = JSON.parse(e.target.value);
-    console.log(sample)
-    const AudioContext = window.AudioContext;
-    const audioCtx = new AudioContext();
+    if (!_.isEmpty(sample)) {
+      const AudioContext = window.AudioContext;
+      const audioCtx = new AudioContext();
 
-    sample.forEach((settingObject) => {
-      const osc = audioCtx.createOscillator();
-      osc.detune.value = settingObject.detune;
-      osc.frequency.value = settingObject.frequency;
-      osc.type = settingObject.waveType
+      sample.forEach(settingObject => {
+        const osc = audioCtx.createOscillator();
+        osc.detune.value = settingObject.detune;
+        osc.frequency.value = settingObject.frequency;
+        osc.type = settingObject.waveType;
 
-      const gainNode = audioCtx.createGain();
-      osc.connect(gainNode);
-      gainNode.connect(audioCtx.destination);
-      osc.start(0);
-      gainNode.gain.value = settingObject.volume;
-      setTimeout(() => osc.stop(), settingObject.length * 1000);
-    })
-
+        const gainNode = audioCtx.createGain();
+        osc.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        osc.start(0);
+        gainNode.gain.value = settingObject.volume;
+        setTimeout(() => osc.stop(), settingObject.length * 1000);
+      });
+    }
   };
 
   onSampleChange = e => {
-    let sampleOrderCopy = this.state.samples
-    sampleOrderCopy[e.sampleAssignment - 1] = e.sampleSum
+    let sampleOrderCopy = this.state.samples;
+    sampleOrderCopy[e.sampleAssignment - 1] = e.sampleSum;
     this.setState({
       samples: sampleOrderCopy
     });
