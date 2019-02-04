@@ -10,7 +10,7 @@ export default class OscillatorSettings extends Component {
             <input
               id={this.props.id}
               name="frequency"
-              type="text"
+              type="number"
               value={this.props.frequency}
               onChange={this.props.handleSampleChange}
             />
@@ -34,7 +34,7 @@ export default class OscillatorSettings extends Component {
             <input
               id={this.props.id}
               name="detune"
-              type="text"
+              type="number"
               value={this.props.detune}
               onChange={this.props.handleSampleChange}
             />
@@ -44,8 +44,18 @@ export default class OscillatorSettings extends Component {
             <input
               id={this.props.id}
               name="length"
-              type="text"
+              type="number"
               value={this.props.length}
+              onChange={this.props.handleSampleChange}
+            />
+          </label>
+          <label>
+            Volume
+            <input
+              id={this.props.id}
+              name="volume"
+              type="number"
+              value={this.props.volume}
               onChange={this.props.handleSampleChange}
             />
           </label>

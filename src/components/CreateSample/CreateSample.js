@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./CreateSample.css";
 import OscillatorSettings from "../OscillatorSettings/OscillatorSettings";
-import Effects from "../Effects/Effects";
+// import Effects from "../Effects/Effects";
 
 export default class CreateSample extends Component {
   constructor(props) {
@@ -18,31 +18,39 @@ export default class CreateSample extends Component {
           waveType: "sine"
         }
       ],
-      effects: {
-        delay: 0,
-        panning: 0,
-        position: {
-          positionX: 0,
-          positionY: 0,
-          positionZ: 0,
-          forwardX: 0,
-          forwardY: 0,
-          forwardZ: 0,
-          upX: 0,
-          upY: 0,
-          upZ: 0
-        },
-        reverb: {
-          roomSize: "",
-          dampening: "",
-          wet: "",
-          dry: ""
+      oscillatorObject: {
+        0: {
+          length: 1,
+          source: "",
+          detune: 0,
+          frequency: 440,
+          volume: 1,
+          waveType: "sine"
         }
       },
+      // effects: {
+      //   delay: 0,
+      //   panning: 0,
+      //   position: {
+      //     positionX: 0,
+      //     positionY: 0,
+      //     positionZ: 0,
+      //     forwardX: 0,
+      //     forwardY: 0,
+      //     forwardZ: 0,
+      //     upX: 0,
+      //     upY: 0,
+      //     upZ: 0
+      //   },
+      //   reverb: {
+      //     roomSize: "",
+      //     dampening: "",
+      //     wet: "",
+      //     dry: ""
+      //   }
+      // },
       sampleAssignment: 1,
-      samplerRows: 1,
-      newOscillatorObject: {},
-      newEffectObject: {}
+      samplerRows: 1
     };
   }
 
@@ -66,30 +74,15 @@ export default class CreateSample extends Component {
   };
 
   handleSampleChange = e => {
-    const { newOscillatorObject } = this.state;
+    let { oscillatorObject } = this.state;
     const value = e.target.value;
+    const name = e.target.name
     const id = e.target.id;
-    let sampleSumCopy = this.state.sampleSum;
-    newOscillatorObject[e.target.name] = value;
-    sampleSumCopy[id] = newOscillatorObject;
+    oscillatorObject[id] = { [name]: value };
+    console.log(oscillatorObject)
     this.setState({
-      sampleSum: sampleSumCopy
+      oscillatorObject: oscillatorObject
     });
-  };
-
-  handleEffectChange = e => {
-    const value = e.target.value;
-    this.setState({
-      newEffectObject: value
-    });
-  };
-
-  onOscillatorSubmit = e => {
-    const { newOscillatorObject } = this.state;
-
-    // this.setState( {
-    //   sampleSum: newSampleSum
-    // })
   };
 
   addAdditionalSample = () => {
@@ -115,8 +108,9 @@ export default class CreateSample extends Component {
       samplerRows.push(
         <OscillatorSettings
           handleSampleChange={this.handleSampleChange}
-          sampleSum={this.state.sampleSum}
+          sampleSum={this.state.oscillatorObject}
           id={i}
+          key={i}
         />
       );
     }
@@ -140,13 +134,13 @@ export default class CreateSample extends Component {
             {padAssignment}
           </select>
         </label>
-        <Effects
+        {/* <Effects
           delay={this.state.effects.delay}
           reverb={this.state.effects.reverb}
           posiiton={this.state.effects.position}
           panning={this.state.effects.panning}
           handleEffectChange={this.handleEffectChange}
-        />
+        /> */}
       </div>
     );
   }
