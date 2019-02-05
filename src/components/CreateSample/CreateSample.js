@@ -8,26 +8,13 @@ export default class CreateSample extends Component {
     super(props);
 
     this.state = {
-      sampleSum: [
-        {
-          length: 1,
-          source: "",
-          detune: 0,
-          frequency: 440,
-          volume: 1,
-          waveType: "sine"
-        }
-      ],
-      oscillatorObject: {
-        0: {
-          length: 1,
-          source: "",
-          detune: 0,
-          frequency: 440,
-          volume: 1,
-          waveType: "sine"
-        }
-      },
+      sampleSum: [],
+      length: "",
+      source: "",
+      detune: "",
+      frequency: "",
+      volume: "",
+      waveType: "",
       // effects: {
       //   delay: 0,
       //   panning: 0,
@@ -50,38 +37,49 @@ export default class CreateSample extends Component {
       //   }
       // },
       sampleAssignment: 1,
-      samplerRows: 1
+      samplerRows: 1,
+      defaultOscillator: {
+        length: 1,
+        detune: 0,
+        frequency: 440,
+        volume: 1,
+        waveType: "sine"
+      }
     };
   }
 
   createSample = () => {
-    this.props.onSampleChange(this.state);
+    const { sampleSum, oscillatorObject } = this.state;
+    console.log(oscillatorObject);
+    sampleSum.push(oscillatorObject);
+    this.props.onSampleChange(sampleSum);
     this.setState({
-      sampleSum: [
-        {
-          id: 1,
-          length: 1,
-          source: "",
-          detune: 0,
-          frequency: 440,
-          volume: 1,
-          waveType: "sine",
-          sampleAssignment: 1
-        }
-      ],
-      samplerRows: 1
+      sampleSum: [],
+      length: "",
+      source: "",
+      detune: "",
+      frequency: "",
+      volume: "",
+      waveType: ""
     });
   };
 
   handleSampleChange = e => {
-    let { oscillatorObject } = this.state;
+    const { defaultOscillator } = this.state;
+
     const value = e.target.value;
-    const name = e.target.name
+    const name = e.target.name;
     const id = e.target.id;
-    oscillatorObject[id] = { [name]: value };
-    console.log(oscillatorObject)
+
+    let newOscillator = Object.create(defaultOscillator);
+    newOscillator[id] = { [name]: value };
+
     this.setState({
-      oscillatorObject: oscillatorObject
+      frequency: newOscillator[id].frequency,
+      detune: newOscillator[id].detune,
+      length: newOscillator[id].length,
+      volume: newOscillator[id].volume,
+      waveType: newOscillator[id].waveType
     });
   };
 
@@ -108,7 +106,11 @@ export default class CreateSample extends Component {
       samplerRows.push(
         <OscillatorSettings
           handleSampleChange={this.handleSampleChange}
-          sampleSum={this.state.oscillatorObject}
+          frequency={this.state.frequency}
+          length={this.state.length}
+          detune={this.state.detune}
+          volume={this.state.volume}
+          waveType={this.state.waveType}
           id={i}
           key={i}
         />

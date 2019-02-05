@@ -1,10 +1,10 @@
-const createOscillator = ({ length = 1, detune = 0, frequency = 440, volume = 1, waveType = 'sine', id = 0 }) => ({
-  length,
-  detune,
-  frequency,
-  volume,
-  waveType,
-  id
-})
-
-export default createOscillator
+export default function Oscillator() {
+  const settings = {
+    length: 1,
+    detune: 0,
+    frequency: 440,
+    volume: 1,
+    waveType: "sine"
+  };
+  return Object.create(settings);
+}

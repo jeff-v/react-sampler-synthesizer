@@ -1,27 +1,28 @@
 import React, { Component } from "react";
 
 export default class OscillatorSettings extends Component {
-
   render() {
+    const { length, detune, frequency, volume, waveType, id, handleSampleChange } = this.props
+
     return (
         <form>
           <label>
             Frequency:
             <input
-              id={this.props.id}
+              id={id}
               name="frequency"
               type="number"
-              value={this.props.frequency}
-              onChange={this.props.handleSampleChange}
+              value={frequency}
+              onChange={handleSampleChange}
             />
           </label>
           <label>
             Wave type:
             <select
-              id={this.props.id}
+              id={id}
               name="waveType"
-              value={this.props.waveType}
-              onChange={this.props.handleSampleChange}
+              value={waveType}
+              onChange={handleSampleChange}
             >
               <option value="sine">Sine</option>
               <option value="square">Square</option>
@@ -32,34 +33,42 @@ export default class OscillatorSettings extends Component {
           <label>
             Detune:
             <input
-              id={this.props.id}
+              id={id}
               name="detune"
               type="number"
-              value={this.props.detune}
-              onChange={this.props.handleSampleChange}
+              value={detune}
+              onChange={handleSampleChange}
             />
           </label>
           <label>
             Length
             <input
-              id={this.props.id}
+              id={id}
               name="length"
               type="number"
-              value={this.props.length}
-              onChange={this.props.handleSampleChange}
+              value={length}
+              onChange={handleSampleChange}
             />
           </label>
           <label>
             Volume
             <input
-              id={this.props.id}
+              id={id}
               name="volume"
               type="number"
-              value={this.props.volume}
-              onChange={this.props.handleSampleChange}
+              value={volume}
+              onChange={handleSampleChange}
             />
           </label>
         </form>
     );
   }
 }
+
+OscillatorSettings.defaultProps = {
+  length: 1,
+  detune: 0,
+  frequency: 440,
+  volume: 1,
+  waveType: "sine"
+};

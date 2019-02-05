@@ -26,6 +26,7 @@ class App extends Component {
 
   playSample = e => {
     const sample = JSON.parse(e.target.value);
+    console.log(sample)
     if (!_.isEmpty(sample)) {
       const AudioContext = window.AudioContext;
       const audioCtx = new AudioContext();
@@ -47,6 +48,7 @@ class App extends Component {
   };
 
   onSampleChange = e => {
+    console.log(e)
     let sampleOrderCopy = this.state.samples;
     sampleOrderCopy[e.sampleAssignment - 1] = e.sampleSum;
     this.setState({
