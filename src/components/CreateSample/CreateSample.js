@@ -15,6 +15,9 @@ export default class CreateSample extends Component {
       frequency: "",
       volume: "",
       waveType: "",
+      oscillatorObject: {
+        0: {}
+      },
       // effects: {
       //   delay: 0,
       //   panning: 0,
@@ -71,15 +74,22 @@ export default class CreateSample extends Component {
     const name = e.target.name;
     const id = e.target.id;
 
-    let newOscillator = Object.create(defaultOscillator);
-    newOscillator[id] = { [name]: value };
+    let newOscillator = {}
+    newOscillator[id] = Object.assign(defaultOscillator)
+    let iteratedOscillator = {}
+    iteratedOscillator[id] = Object.assign(defaultOscillator, newOscillator[id] = { [name]: value })
+
 
     this.setState({
-      frequency: newOscillator[id].frequency,
-      detune: newOscillator[id].detune,
-      length: newOscillator[id].length,
-      volume: newOscillator[id].volume,
-      waveType: newOscillator[id].waveType
+      oscillatorObject: {
+        [id]: {
+          frequency: iteratedOscillator[id].frequency,
+          detune: iteratedOscillator[id].detune,
+          length: iteratedOscillator[id].length,
+          volume: iteratedOscillator[id].volume,
+          waveType: iteratedOscillator[id].waveType
+        }
+      }
     });
   };
 
@@ -106,11 +116,11 @@ export default class CreateSample extends Component {
       samplerRows.push(
         <OscillatorSettings
           handleSampleChange={this.handleSampleChange}
-          frequency={this.state.frequency}
-          length={this.state.length}
-          detune={this.state.detune}
-          volume={this.state.volume}
-          waveType={this.state.waveType}
+          frequency={this.state.oscillatorObject[i].frequency}
+          length={this.state.oscillatorObject[i].length}
+          detune={this.state.oscillatorObject[i].detune}
+          volume={this.state.oscillatorObject[i].volume}
+          waveType={this.state.oscillatorObject[i].waveType}
           id={i}
           key={i}
         />
