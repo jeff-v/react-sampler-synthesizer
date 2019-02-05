@@ -8,7 +8,6 @@ export default class CreateSample extends Component {
     super(props);
 
     this.state = {
-      sampleSum: [],
       length: "",
       source: "",
       detune: "",
@@ -18,27 +17,6 @@ export default class CreateSample extends Component {
       oscillatorObject: {
         0: {}
       },
-      // effects: {
-      //   delay: 0,
-      //   panning: 0,
-      //   position: {
-      //     positionX: 0,
-      //     positionY: 0,
-      //     positionZ: 0,
-      //     forwardX: 0,
-      //     forwardY: 0,
-      //     forwardZ: 0,
-      //     upX: 0,
-      //     upY: 0,
-      //     upZ: 0
-      //   },
-      //   reverb: {
-      //     roomSize: "",
-      //     dampening: "",
-      //     wet: "",
-      //     dry: ""
-      //   }
-      // },
       sampleAssignment: 1,
       samplerRows: 1,
       defaultOscillator: {
@@ -52,18 +30,29 @@ export default class CreateSample extends Component {
   }
 
   createSample = () => {
-    const { sampleSum, oscillatorObject } = this.state;
-    console.log(oscillatorObject);
-    sampleSum.push(oscillatorObject);
-    this.props.onSampleChange(sampleSum);
+    let { oscillatorObject, sampleAssignment } = this.state;
+
+    oscillatorObject.sampleAssignment = sampleAssignment
+    this.props.onSampleChange(oscillatorObject);
     this.setState({
-      sampleSum: [],
       length: "",
       source: "",
       detune: "",
       frequency: "",
       volume: "",
-      waveType: ""
+      waveType: "",
+      oscillatorObject: {
+        0: {}
+      },
+      sampleAssignment: 1,
+      samplerRows: 1,
+      defaultOscillator: {
+        length: 1,
+        detune: 0,
+        frequency: 440,
+        volume: 1,
+        waveType: "sine"
+      }
     });
   };
 
@@ -74,11 +63,13 @@ export default class CreateSample extends Component {
     const name = e.target.name;
     const id = e.target.id;
 
-    let newOscillator = {}
-    newOscillator[id] = Object.assign(defaultOscillator)
-    let iteratedOscillator = {}
-    iteratedOscillator[id] = Object.assign(defaultOscillator, newOscillator[id] = { [name]: value })
-
+    let newOscillator = {};
+    newOscillator[id] = Object.assign(defaultOscillator);
+    let iteratedOscillator = {};
+    iteratedOscillator[id] = Object.assign(
+      defaultOscillator,
+      (newOscillator[id] = { [name]: value })
+    );
 
     this.setState({
       oscillatorObject: {

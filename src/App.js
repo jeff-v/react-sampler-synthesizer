@@ -25,8 +25,8 @@ class App extends Component {
   }
 
   playSample = e => {
-    const sample = JSON.parse(e.target.value);
-    console.log(sample)
+    const sample = Object.values(JSON.parse(e.target.value)).filter((element) => typeof(element) === "object")
+
     if (!_.isEmpty(sample)) {
       const AudioContext = window.AudioContext;
       const audioCtx = new AudioContext();
@@ -48,9 +48,8 @@ class App extends Component {
   };
 
   onSampleChange = e => {
-    console.log(e)
     let sampleOrderCopy = this.state.samples;
-    sampleOrderCopy[e.sampleAssignment - 1] = e.sampleSum;
+    sampleOrderCopy[e.sampleAssignment - 1] = e;
     this.setState({
       samples: sampleOrderCopy
     });
