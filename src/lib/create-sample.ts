@@ -1,21 +1,15 @@
 import { SampleController } from '../types/sample-types'
 
 export const createSample = ({
-    oscillator = new AudioContext().createOscillator(),
-    stop = () => setTimeout(() => {}, 1),
-    volume = 1,
+  oscillator = new AudioContext().createOscillator(),
+  start = () => {},
+  stop = () => setTimeout(() => {}, 1),
+  volume,
+  assignment
 }: SampleController) => ({
-    oscillator,
-    stop,
-    volume,
-    setSample(
-        oscillator: OscillatorNode,
-        stop: () => NodeJS.Timeout,
-        volume: number
-    ) {
-        this.oscillator = oscillator
-        this.stop = stop
-        this.volume = volume
-        return this
-    },
+  oscillator,
+  start,
+  stop,
+  volume,
+  assignment
 })
