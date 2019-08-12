@@ -5,7 +5,6 @@ export interface SampleParams extends OscillatorOptions {
   source?: string
   type: 'sine' | 'square' | 'sawtooth' | 'triangle' | 'custom'
   volume: number
-  audioContext: AudioContext | undefined
 }
 
 export interface SampleController {

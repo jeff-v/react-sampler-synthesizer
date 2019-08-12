@@ -9,16 +9,17 @@ import {
   changeVolume,
   changeType
 } from '../../state/actions/sample-actions'
-import { createNewSample } from '../../state/actions/layout-actions'
+import { addSample } from '../../state/actions/layout-actions'
 
 const CreateSample = () => {
   const dispatch = useDispatch()
-  const { audioContext, length, detune, frequency, volume, type } = useSelector(
+  const { length, detune, frequency, volume, type } = useSelector(
     (state: AppState) => state.sample,
     shallowEqual
   )
-  const assignment =
-    useSelector((state: AppState) => state.layout.allSamples).length + 1
+  const assignment = useSelector((state: AppState) => state.layout.allSamples)
+    .length
+  const audioContext = useSelector((state: AppState) => state.audioContext)
 
   function handleLengthChange(event: ChangeEvent<HTMLInputElement>) {
     dispatch(
@@ -32,7 +33,7 @@ const CreateSample = () => {
   function handleDetuneChange(event: ChangeEvent<HTMLInputElement>) {
     dispatch(
       changeDetune({
-        type: 'detune',
+        type: 'CHANGE_DETUNE',
         result: Number(event.currentTarget.value)
       })
     )
@@ -41,7 +42,7 @@ const CreateSample = () => {
   function handleFrequencyChange(event: ChangeEvent<HTMLInputElement>) {
     dispatch(
       changeFrequency({
-        type: 'frequency',
+        type: 'CHANGE_FREQUENCY',
         result: Number(event.currentTarget.value)
       })
     )
@@ -50,18 +51,19 @@ const CreateSample = () => {
   function handleVolumeChange(event: ChangeEvent<HTMLInputElement>) {
     dispatch(
       changeVolume({
-        type: 'volume',
+        type: 'CHANGE_VOLUME',
         result: Number(event.currentTarget.value)
       })
     )
   }
 
   function handleWavetypeChange(event: ChangeEvent<HTMLInputElement>) {
-    dispatch(changeType({ type: 'type', result: event.currentTarget.value }))
+    dispatch(
+      changeType({ type: 'CHANGE_TYPE', result: event.currentTarget.value })
+    )
   }
 
   function createOscillator() {
-    console.log(audioContext, 'audio context')
     if (audioContext) {
       return new OscillatorNode(audioContext, {
         type,
@@ -69,11 +71,19 @@ const CreateSample = () => {
         frequency
       })
     }
-    return new OscillatorNode(new AudioContext(), {
-      type,
-      detune,
-      frequency
-    })
+    const audioCtx = new AudioContext()
+    console.log(audioCtx)
+    const gainNode = audioCtx.createGain()
+    // const oscillator = new OscillatorNode(audioCtx, {
+    //   type,
+    //   detune,
+    //   frequency
+    // })
+    const oscillator = audioCtx.createOscillator()
+    oscillator.connect(gainNode)
+    gainNode.connect(audioCtx.destination)
+    gainNode.gain.value = volume
+    return oscillator
   }
 
   function returnSample(oscillator: OscillatorNode) {
@@ -87,11 +97,10 @@ const CreateSample = () => {
   }
 
   function handleSubmit() {
-    console.log('hi')
     const newSample = returnSample(createOscillator())
     dispatch(
-      createNewSample({
-        type: 'createSample',
+      addSample({
+        type: 'ADD_SAMPLE',
         result: newSample
       })
     )
@@ -145,8 +154,8 @@ const CreateSample = () => {
             onChange={handleWavetypeChange}
           />
         </label>
-        <button type="submit" name="submit" onClick={handleSubmit} />
       </form>
+      <button type="submit" name="submit" onClick={handleSubmit} />
     </>
   )
 }

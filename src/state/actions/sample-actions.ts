@@ -8,7 +8,6 @@ export const CHANGE_TYPE = 'CHANGE_TYPE'
 export const CHANGE_CONTEXT = 'CHANGE_CONTEXT'
 
 export function changeLength(sampleAction: SampleAction) {
-  console.log(sampleAction)
   return {
     type: CHANGE_LENGTH,
     result: sampleAction.result

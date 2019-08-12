@@ -32,11 +32,7 @@ export default function layoutReducer(
       })
     case ADD_SAMPLE:
       return Object.assign({}, state, {
-        allSamples: state.allSamples.splice(
-          action.result.assignment - 1,
-          0,
-          action.result
-        )
+        allSamples: state.allSamples.concat(action.result)
       })
     case REMOVE_SAMPLE:
       return Object.assign({}, state, {
