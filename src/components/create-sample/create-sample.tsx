@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react'
+import React, { ChangeEvent, useEffect } from 'react'
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
 import { createSample } from '../../lib/create-sample'
 import { AppState } from '../../types/app-types'
@@ -9,7 +9,7 @@ import {
   changeVolume,
   changeType
 } from '../../state/actions/sample-actions'
-import { addSample } from '../../state/actions/layout-actions'
+import { addSample, removeSample } from '../../state/actions/layout-actions'
 
 const CreateSample = () => {
   const dispatch = useDispatch()
@@ -19,7 +19,7 @@ const CreateSample = () => {
   )
   const assignment = useSelector((state: AppState) => state.layout.allSamples)
     .length
-  const audioContext = useSelector((state: AppState) => state.audioContext)
+  const audioContext = useSelector((state: AppState) => state.app.audioContext)
 
   function handleLengthChange(event: ChangeEvent<HTMLInputElement>) {
     dispatch(
@@ -64,24 +64,14 @@ const CreateSample = () => {
   }
 
   function createOscillator() {
-    if (audioContext) {
-      return new OscillatorNode(audioContext, {
-        type,
-        detune,
-        frequency
-      })
-    }
-    const audioCtx = new AudioContext()
-    console.log(audioCtx)
-    const gainNode = audioCtx.createGain()
-    // const oscillator = new OscillatorNode(audioCtx, {
-    //   type,
-    //   detune,
-    //   frequency
-    // })
-    const oscillator = audioCtx.createOscillator()
+    const gainNode = audioContext.createGain()
+    const oscillator = new OscillatorNode(audioContext, {
+      type,
+      detune,
+      frequency
+    })
     oscillator.connect(gainNode)
-    gainNode.connect(audioCtx.destination)
+    gainNode.connect(audioContext.destination)
     gainNode.gain.value = volume
     return oscillator
   }
@@ -95,6 +85,21 @@ const CreateSample = () => {
       assignment
     })
   }
+
+  useEffect(() => {
+    dispatch(
+      removeSample({
+        type: 'REMOVE_SAMPLE',
+        result: returnSample(createOscillator())
+      })
+    )
+    dispatch(
+      addSample({
+        type: 'ADD_SAMPLE',
+        result: returnSample(createOscillator())
+      })
+    )
+  }, [])
 
   function handleSubmit() {
     const newSample = returnSample(createOscillator())

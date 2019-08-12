@@ -3,7 +3,7 @@ import { AppAction } from '../../types/app-types'
 
 export default function appReducer(
   state = {
-    app: undefined
+    audioContext: new AudioContext()
   },
   action: AppAction
 ) {

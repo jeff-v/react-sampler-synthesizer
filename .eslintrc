@@ -58,6 +58,7 @@
     "react/jsx-indent-props": "off",
     "react/jsx-one-expression-per-line": "off",
     "react/jsx-wrap-multilines": "off",
+    "react/jsx-sort-props": "on",
     "react/destructuring-assignment": "off",
     "react/no-array-index-key": "off",
     "jsx-a11y/no-noninteractive-tabindex": [

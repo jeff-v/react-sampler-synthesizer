@@ -8,6 +8,7 @@ import Sampler from './components/sampler/sampler'
 import rootReducer from './state/reducers/root-reducer'
 
 const store = createStore(rootReducer, devToolsEnhancer({}))
+console.log(store.getState())
 const App = () => {
   return (
     <Provider store={store}>

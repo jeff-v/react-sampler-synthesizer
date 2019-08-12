@@ -5,7 +5,9 @@ export interface AppState {
     allSamples: SampleController[]
   }
   sample: SampleParams
-  audioContext: AudioContext
+  app: {
+    audioContext: AudioContext
+  }
 }
 
 export interface AppAction {
