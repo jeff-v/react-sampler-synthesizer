@@ -79,8 +79,9 @@ const CreateSample = () => {
   function returnSample(oscillator: OscillatorNode) {
     return createSample({
       oscillator,
-      start: () => oscillator.start,
-      stop: () => setTimeout(() => oscillator.stop, length * 1000),
+      play: () => (
+        oscillator.start(0), setTimeout(() => oscillator.stop, length * 1000)
+      ),
       volume,
       assignment
     })

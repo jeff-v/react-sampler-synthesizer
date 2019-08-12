@@ -8,9 +8,8 @@ export interface SampleParams extends OscillatorOptions {
 }
 
 export interface SampleController {
-  oscillator: OscillatorNode | undefined
-  start: () => void
-  stop: () => NodeJS.Timeout
+  oscillator: OscillatorNode
+  play: () => NodeJS.Timeout
   volume: number
   assignment: number
 }

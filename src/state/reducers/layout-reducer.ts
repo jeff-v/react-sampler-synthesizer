@@ -11,8 +11,7 @@ const oscillator = new AudioContext().createOscillator()
 
 const initialSampleController = createSample({
   oscillator,
-  start: () => oscillator.start,
-  stop: () => setTimeout(() => oscillator.stop, 1000),
+  play: () => setTimeout(() => oscillator.stop, 1000),
   volume: 1,
   assignment: 1
 })
