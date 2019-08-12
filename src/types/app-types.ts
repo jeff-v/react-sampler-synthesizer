@@ -7,10 +7,11 @@ export interface AppState {
   sample: SampleParams
   app: {
     audioContext: AudioContext
+    gainNode: GainNode
   }
 }
 
 export interface AppAction {
   type: string
-  result: AudioContext
+  result: AudioContext | GainNode
 }

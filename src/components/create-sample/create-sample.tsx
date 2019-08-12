@@ -2,6 +2,7 @@ import React, { ChangeEvent, useEffect } from 'react'
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
 import { createSample } from '../../lib/create-sample'
 import { AppState } from '../../types/app-types'
+import { changeGain } from '../../state/actions/app-actions'
 import {
   changeLength,
   changeDetune,
@@ -19,7 +20,7 @@ const CreateSample = () => {
   )
   const assignment = useSelector((state: AppState) => state.layout.allSamples)
     .length
-  const audioContext = useSelector((state: AppState) => state.app.audioContext)
+  const { audioContext, gainNode } = useSelector((state: AppState) => state.app)
 
   function handleLengthChange(event: ChangeEvent<HTMLInputElement>) {
     dispatch(
@@ -64,15 +65,14 @@ const CreateSample = () => {
   }
 
   function createOscillator() {
-    const gainNode = audioContext.createGain()
     const oscillator = new OscillatorNode(audioContext, {
       type,
       detune,
       frequency
     })
     oscillator.connect(gainNode)
-    gainNode.connect(audioContext.destination)
     gainNode.gain.value = volume
+    dispatch(changeGain({ type: 'CHANGE_GAIN', result: gainNode }))
     return oscillator
   }
 

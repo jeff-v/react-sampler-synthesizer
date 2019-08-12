@@ -1,6 +1,8 @@
 import React from 'react'
 
-const Effects = () => <div>I will be an effects module</div>
+const Effects = () => {
+  return <div>I will be an effects module</div>
+}
 
 export default Effects
 

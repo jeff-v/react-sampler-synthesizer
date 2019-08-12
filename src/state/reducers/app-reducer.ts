@@ -1,16 +1,23 @@
-import { NEW_AUDIO_CONTEXT } from '../actions/app-actions'
+import { CHANGE_CONTEXT, CHANGE_GAIN } from '../actions/app-actions'
 import { AppAction } from '../../types/app-types'
+
+const audioCtx = new AudioContext()
 
 export default function appReducer(
   state = {
-    audioContext: new AudioContext()
+    audioContext: audioCtx,
+    gainNode: audioCtx.createGain()
   },
   action: AppAction
 ) {
   switch (action.type) {
-    case NEW_AUDIO_CONTEXT:
+    case CHANGE_CONTEXT:
       return Object.assign({}, state, {
-        audioContext: new AudioContext()
+        audioContext: action.result
+      })
+    case CHANGE_GAIN:
+      return Object.assign({}, state, {
+        gainNode: action.result
       })
     default:
       return state
