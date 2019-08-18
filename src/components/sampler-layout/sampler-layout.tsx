@@ -1,48 +1,49 @@
 import React, { useState } from 'react'
 import { useSelector, shallowEqual } from 'react-redux'
 import { AppState } from '../../types/app-types'
-import { SampleController } from '../../types/sample-types'
+import { SampleController, SampleParams } from '../../types/sample-types'
+import { createSample } from '../../lib/create-sample'
 
 const SamplerLayout = () => {
-  const [oscillating, setOscillating] = useState(false)
   const [playing, setPlaying] = useState(false)
+  const [audioContext] = useState(new AudioContext())
   const allSamples = useSelector(
     (state: AppState) => state.layout.allSamples,
     shallowEqual
   )
 
-  const { audioContext } = useSelector((state: AppState) => state.app)
+  function newSample(actionResult: SampleParams) {
+    const { assignment, detune, frequency, length, type, volume } = actionResult
 
-  const { length } = useSelector((state: AppState) => state.sample)
+    const sampleOscillator = new OscillatorNode(audioContext, {
+      detune,
+      frequency,
+      type
+    })
 
-  function handleOscillator(sample: SampleController) {
-    sample.oscillator.start(0)
-    setOscillating(true)
+    const gainNode = audioContext.createGain()
+    sampleOscillator.connect(gainNode)
+    sampleOscillator.start(0)
+
+    return createSample({
+      oscillator: sampleOscillator,
+      play: () => {
+        gainNode.connect(audioContext.destination)
+        return setTimeout(() => gainNode.disconnect(0), length * 1000)
+      },
+      volume,
+      assignment
+    })
   }
 
-  function handlePlaying(sample: SampleController) {
-    if (!oscillating) {
-      handleOscillator(sample)
-    }
-    if (!playing) {
-      setPlaying(true)
-      sample.oscillator.connect(audioContext.destination)
-      setTimeout(() => {
-        if (playing) {
-          sample.oscillator.disconnect(audioContext.destination)
-          setPlaying(false)
-        }
-      }, length * 1000)
-    } else {
-      sample.oscillator.disconnect(audioContext.destination)
-      setPlaying(false)
-    }
-  }
+  const sampleControllers = allSamples.map(sampleParams =>
+    newSample(sampleParams)
+  )
 
-  const sampleLayout = allSamples.map((sample, index) => (
+  const sampleLayout = sampleControllers.map((sample, index) => (
     <span>
       {index + 1}
-      <button type="button" onClick={() => handlePlaying(sample)} />
+      <button type="button" onClick={() => sample.play()} />
     </span>
   ))
   return <>{sampleLayout}</>

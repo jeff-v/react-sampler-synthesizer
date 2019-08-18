@@ -1,8 +1,8 @@
-import { SampleController, SampleParams } from './sample-types'
+import { SampleParams } from './sample-types'
 
 export interface AppState {
   layout: {
-    allSamples: SampleController[]
+    allSamples: SampleParams[]
   }
   sample: SampleParams
   app: {

@@ -1,113 +1,55 @@
-import React, { ChangeEvent, useEffect } from 'react'
-import { useSelector, shallowEqual, useDispatch } from 'react-redux'
-import { createSample } from '../../lib/create-sample'
-import { AppState } from '../../types/app-types'
-import { changeGain } from '../../state/actions/app-actions'
-import {
-  changeLength,
-  changeDetune,
-  changeFrequency,
-  changeVolume,
-  changeType
-} from '../../state/actions/sample-actions'
-import { addSample, removeSample } from '../../state/actions/layout-actions'
+import React, { ChangeEvent, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { SampleParams, SampleController } from '../../types/sample-types'
+import { addSample } from '../../state/actions/layout-actions'
 
 const CreateSample = () => {
   const dispatch = useDispatch()
-  const { length, detune, frequency, volume, type } = useSelector(
-    (state: AppState) => state.sample,
-    shallowEqual
+  const [length, setLength] = useState<SampleParams['length']>(1)
+  const [detune, setDetune] = useState<SampleParams['detune']>(0)
+  const [frequency, setFrequency] = useState<SampleParams['frequency']>(440)
+  const [volume, setVolume] = useState<SampleParams['volume']>(1)
+  const [type, setType] = useState<SampleParams['type']>('sine')
+  const [assignment, setAssignment] = useState<SampleController['assignment']>(
+    1
   )
-  const assignment = useSelector((state: AppState) => state.layout.allSamples)
-    .length
-  const { audioContext, gainNode } = useSelector((state: AppState) => state.app)
 
   function handleLengthChange(event: ChangeEvent<HTMLInputElement>) {
-    dispatch(
-      changeLength({
-        type: 'CHANGE_LENGTH',
-        result: Number(event.currentTarget.value)
-      })
-    )
+    setLength(Number(event.currentTarget.value))
   }
 
   function handleDetuneChange(event: ChangeEvent<HTMLInputElement>) {
-    dispatch(
-      changeDetune({
-        type: 'CHANGE_DETUNE',
-        result: Number(event.currentTarget.value)
-      })
-    )
+    setDetune(Number(event.currentTarget.value))
   }
 
   function handleFrequencyChange(event: ChangeEvent<HTMLInputElement>) {
-    dispatch(
-      changeFrequency({
-        type: 'CHANGE_FREQUENCY',
-        result: Number(event.currentTarget.value)
-      })
-    )
+    setFrequency(Number(event.currentTarget.value))
   }
 
   function handleVolumeChange(event: ChangeEvent<HTMLInputElement>) {
-    dispatch(
-      changeVolume({
-        type: 'CHANGE_VOLUME',
-        result: Number(event.currentTarget.value)
-      })
-    )
+    setVolume(Number(event.currentTarget.value))
   }
 
-  function handleWavetypeChange(event: ChangeEvent<HTMLInputElement>) {
-    dispatch(
-      changeType({ type: 'CHANGE_TYPE', result: event.currentTarget.value })
-    )
+  function handleWavetypeChange(event: ChangeEvent<HTMLSelectElement>) {
+    setType(event.currentTarget.value as SampleParams['type'])
   }
 
-  function createOscillator() {
-    const oscillator = new OscillatorNode(audioContext, {
-      type,
-      detune,
-      frequency
-    })
-    oscillator.connect(gainNode)
-    gainNode.gain.value = volume
-    dispatch(changeGain({ type: 'CHANGE_GAIN', result: gainNode }))
-    return oscillator
+  function handleAssignment(event: ChangeEvent<HTMLInputElement>) {
+    setAssignment(Number(event.currentTarget.value))
   }
-
-  function returnSample(oscillator: OscillatorNode) {
-    return createSample({
-      oscillator,
-      play: () => (
-        oscillator.start(0), setTimeout(() => oscillator.stop, length * 1000)
-      ),
-      volume,
-      assignment
-    })
-  }
-
-  useEffect(() => {
-    dispatch(
-      removeSample({
-        type: 'REMOVE_SAMPLE',
-        result: returnSample(createOscillator())
-      })
-    )
-    dispatch(
-      addSample({
-        type: 'ADD_SAMPLE',
-        result: returnSample(createOscillator())
-      })
-    )
-  }, [])
 
   function handleSubmit() {
-    const newSample = returnSample(createOscillator())
     dispatch(
       addSample({
         type: 'ADD_SAMPLE',
-        result: newSample
+        result: {
+          assignment,
+          length,
+          detune,
+          frequency,
+          type,
+          volume
+        }
       })
     )
   }
@@ -153,12 +95,16 @@ const CreateSample = () => {
         </label>
         <label>
           Wavetype
-          <input
-            type="text"
-            name="wavetype"
-            value={type}
-            onChange={handleWavetypeChange}
-          />
+          <select value={type} onChange={handleWavetypeChange}>
+            <option value="sine"> sine </option>
+            <option value="square"> square </option>
+            <option value="sawtooth"> sawtooth </option>
+            <option value="triangle"> triangle </option>
+          </select>
+        </label>
+        <label>
+          Assignment
+          <input value={assignment} onChange={handleAssignment} type="number" />
         </label>
       </form>
       <button type="submit" name="submit" onClick={handleSubmit} />

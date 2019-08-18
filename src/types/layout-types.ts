@@ -1,10 +1,10 @@
-import { SampleController } from './sample-types'
+import { SampleParams } from './sample-types'
 
 export interface LayoutParams {
-  allSamples: SampleController[]
+  allSamples: SampleParams[]
 }
 
 export interface LayoutAction {
   type: string
-  result: SampleController
+  result: SampleParams
 }

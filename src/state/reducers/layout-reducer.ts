@@ -2,22 +2,13 @@ import {
   ALL_SAMPLES,
   ADD_SAMPLE,
   REMOVE_SAMPLE,
-  CREATE_NEW_SAMPLE
+  CREATE_NEW_SAMPLE,
+  EDIT_SAMPLE
 } from '../actions/layout-actions'
 import { LayoutParams, LayoutAction } from '../../types/layout-types'
-import { createSample } from '../../lib/create-sample'
-
-const oscillator = new AudioContext().createOscillator()
-
-const initialSampleController = createSample({
-  oscillator,
-  play: () => setTimeout(() => oscillator.stop, 1000),
-  volume: 1,
-  assignment: 1
-})
 
 const initialLayoutState: LayoutParams = {
-  allSamples: [initialSampleController]
+  allSamples: []
 }
 
 export default function layoutReducer(
@@ -39,6 +30,10 @@ export default function layoutReducer(
       })
     case CREATE_NEW_SAMPLE:
       return Object.assign({}, state, {})
+    case EDIT_SAMPLE:
+      return Object.assign({}, state, {
+        allSamples: state.allSamples[action.result.assignment] = action.result
+      })
     default:
       return state
   }

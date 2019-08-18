@@ -9,8 +9,7 @@
     "airbnb-typescript",
     "prettier/@typescript-eslint",
     "plugin:prettier/recommended",
-    "plugin:import/typescript",
-    "plugin:jsx-a11y/recommended"
+    "plugin:import/typescript"
   ],
   "globals": {
     "window": true,
@@ -61,12 +60,6 @@
     "react/jsx-sort-props": "on",
     "react/destructuring-assignment": "off",
     "react/no-array-index-key": "off",
-    "jsx-a11y/no-noninteractive-tabindex": [
-      "error",
-      {
-        "roles": ["region"]
-      }
-    ],
     "space-before-function-paren": 0,
     "strict": 0,
     "trailing-comma": [

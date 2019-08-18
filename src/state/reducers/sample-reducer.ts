@@ -8,12 +8,13 @@ import {
 import { SampleParams, SampleAction } from '../../types/sample-types'
 
 const initialSampleState: SampleParams = {
-  length: 1,
-  source: '',
+  assignment: 1,
   detune: 0,
   frequency: 440,
-  volume: 1,
-  type: 'sine'
+  length: 1,
+  source: '',
+  type: 'sine',
+  volume: 1
 }
 
 export default function sampleReducer(

@@ -5,11 +5,12 @@ export interface SampleParams extends OscillatorOptions {
   source?: string
   type: 'sine' | 'square' | 'sawtooth' | 'triangle' | 'custom'
   volume: number
+  assignment: number
 }
 
 export interface SampleController {
   oscillator: OscillatorNode
-  play: () => NodeJS.Timeout
+  play: () => void
   volume: number
   assignment: number
 }

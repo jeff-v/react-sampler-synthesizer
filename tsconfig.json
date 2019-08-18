@@ -4,7 +4,6 @@
     "esModuleInterop": true,
     "outDir": "./dist/",
     "sourceMap": true,
-    "noUnusedLocals": true,
     "suppressImplicitAnyIndexErrors": true,
     "noErrorTruncation": true,
     "module": "esnext",
