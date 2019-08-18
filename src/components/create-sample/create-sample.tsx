@@ -2,6 +2,7 @@ import React, { ChangeEvent, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { SampleParams, SampleController } from '../../types/sample-types'
 import { addSample } from '../../state/actions/layout-actions'
+import { createSample } from '../../lib/create-sample'
 
 const CreateSample = () => {
   const dispatch = useDispatch()
@@ -52,6 +53,22 @@ const CreateSample = () => {
         }
       })
     )
+  }
+
+  function playCurrentSample() {
+    const audioContext = new AudioContext()
+    const gainNode = audioContext.createGain()
+
+    const sampleOscillator = new OscillatorNode(audioContext, {
+      detune,
+      frequency,
+      type
+    })
+
+    sampleOscillator.connect(gainNode)
+    sampleOscillator.start(0)
+    gainNode.connect(audioContext.destination)
+    setTimeout(() => gainNode.disconnect(0), length * 1000)
   }
 
   return (
@@ -107,6 +124,7 @@ const CreateSample = () => {
           <input value={assignment} onChange={handleAssignment} type="number" />
         </label>
       </form>
+      <button type="button" name="current sound" onClick={playCurrentSample} />
       <button type="submit" name="submit" onClick={handleSubmit} />
     </>
   )

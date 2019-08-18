@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
 import { useSelector, shallowEqual } from 'react-redux'
 import { AppState } from '../../types/app-types'
-import { SampleController, SampleParams } from '../../types/sample-types'
+import { SampleParams } from '../../types/sample-types'
 import { createSample } from '../../lib/create-sample'
 
 const SamplerLayout = () => {
-  const [playing, setPlaying] = useState(false)
   const [audioContext] = useState(new AudioContext())
   const allSamples = useSelector(
     (state: AppState) => state.layout.allSamples,
